@@ -1,4 +1,4 @@
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Prayer from "./components/Prayer";
 import "./index.css"
 function App() {
@@ -13,22 +13,35 @@ function App() {
     { name: "ادلب", value: "Idlib" },
     { name: "الرقه", value: "Alrakkah" },
     { name: "الحسكة", value: "Alhasakah" },
+    { name: "دير الزور", value: "DerAlzoor" },
+    { name: "درعا", value: "Daraa" },
+    { name: "طرطوس", value: "Tartous" },
+    { name: "اللاذقية", value: "Latakia" },
   ];
+
+  const today = new Date();
+  const day = String(today.getDate()).padStart(2, "0");
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const year = today.getFullYear();
+  const formattedDate = `${day}-${month}-${year}`;
+  console.log(formattedDate);
+
+  
 
   const [prayerTimes, setPrayerTimes] = useState();
   const [dateTime,setDateTime] = useState("");
-  const [city, setCity] = useState("Damascus");
+  const [city, setCity] = useState("Homs");
 console.log(city);
   useEffect(()=> {
 
     const fetchPrayerTimes = async () => {
       try {
-        const response = await fetch(`https://api.aladhan.com/v1/timingsByCity/03-09-2024?city=Eg&country=${city}`);
+        const response = await fetch(`https://api.aladhan.com/v1/timingsByCity/${formattedDate}?city=${city}&country=Syria&method=3`);
         const data_prayer = await response.json();
         setPrayerTimes(data_prayer.data.timings);
         setDateTime(data_prayer.data.date.gregorian.date);
         console.log(data_prayer);
-        console.log(data_prayer.data.date.gregorian.date);
+        
         
       } catch (error) {
         console.error("Error fetching prayer times:", error);
@@ -36,7 +49,7 @@ console.log(city);
 }
 fetchPrayerTimes();
 
-},[city])
+},[city , formattedDate])
 
 
 
